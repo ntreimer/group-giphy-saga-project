@@ -8,7 +8,11 @@ import FavoritesList from '../FavoritesList/FavoritesList';
 function App(props) {
   return (
     <div>
-      <h1>Giphy Search!</h1>
+      
+      <header className='header'>
+        <h1>Giphy Search!</h1>
+      </header>
+
       <Router>
         <Route path='/' exact>
           <SearchList />
