@@ -7,20 +7,25 @@ const axios = require('axios');
 require('dotenv').config();
 
 // array to store images from api
-const imageArray = [];
+let imageArray = [];
 
 // return searched giphy images
 router.post('/', (req, res) => {
     console.log('in /giphy GET');
-    console.log('req.body:', req.body);
-    const searchQuery = req.body;
-    axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${process.env.API_KEY}&q=${searchQuery}&limit=3`).then((res) => {
-        console.log(res);
-        [...imageArray, response.data]
-        console.log(imageArray);
+    const searchQuery = req.body.searchQuery;
+    axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${process.env.API_KEY}&q=${searchQuery}&limit=2`).then((response) => {
+        console.log('back from giphy call with:', response.data.data);
+        imageArray = response.data.data;
+        console.log('imagearray:', imageArray);
     }).catch((err) => {
         console.log(err);
     });
+    if (imageArray !== []) {
+        res.sendStatus(200);
+    }
+    else {
+        res.sendStatus(500);
+    }
 });
 
 router.get('/', (req, res) => {

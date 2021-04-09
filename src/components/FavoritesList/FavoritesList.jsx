@@ -8,7 +8,7 @@ function FavoritesList() {
 
     const favFunction = () =>{
         console.log( 'in favFunction' );
-        
+        dispatch( { type: 'FAVORITES', payload: event.target.value } );
     }
 
     const handleButtonClick = () =>{

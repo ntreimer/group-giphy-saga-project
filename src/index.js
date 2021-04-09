@@ -11,11 +11,9 @@ import axios from 'axios';
 // Reducer for our search results
 const giphySearchResults = (state = [], action) => {
   if (action.type === "SEARCH_RESULTS") {
-    console.log('in giphySearchResults:', state);
     return action.payload;
   }
   else if (action.type === "SEARCH_RESULTS_FROM_SAGA") {
-    console.log('in giphySearchResults saga:', state);
     return action.payload;
   }
   else{
@@ -31,8 +29,10 @@ function* searchSaga(action) {
   console.log("in search saga:", action);
 
   try {
-    const response = yield axios.get("/giphy");
-    yield put({ type: "SEARCH_RESULTS_FROM_SAGA", payload: response.data });
+    yield axios.post("/giphy", {searchQuery: action.payload});
+    const response = yield axios.get('/giphy');
+    console.log('saga axios get response:', response);
+    yield put({ type: "SEARCH_RESULTS_FROM_SAGA", payload: response });
   } catch (err) {
     console.log(err);
   }
