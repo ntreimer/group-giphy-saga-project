@@ -8,7 +8,7 @@ import FavoritesList from '../FavoritesList/FavoritesList';
 function App(props) {
   return (
     <div>
-      
+
       <header className='header'>
         <h1>Giphy Search!</h1>
       </header>

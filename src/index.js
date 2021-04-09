@@ -1,35 +1,59 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './components/App/App';
-import { Provider } from 'react-redux';
-import logger from 'redux-logger';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import createsagaMiddleware from 'redux-saga';
-import {put,TakeEvery} from 'redux-saga/effects';
-
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./components/App/App";
+import { Provider } from "react-redux";
+import logger from "redux-logger";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import createSagaMiddleware from "redux-saga";
+import { put, takeEvery } from "redux-saga/effects";
+import axios from 'axios';
 
 // Reducer for our search results
-const giphySearchResults = (state=[], action) => {
-    if (action.type === 'SEARCH_RESULTS'){
+const giphySearchResults = (state = [], action) => {
+  if (action.type === "SEARCH_RESULTS") {
+    console.log('in giphySearchResults:', state);
+    return action.payload;
+  }
+  else if (action.type === "SEARCH_RESULTS_FROM_SAGA") {
+    console.log('in giphySearchResults saga:', state);
+    return action.payload;
+  }
+  else{
+      return state;
+  }
+};
 
-    }
+function* watcherSaga(action) {
+  yield takeEvery("SEARCH_RESULTS", searchSaga);
 }
 
+function* searchSaga(action) {
+  console.log("in search saga:", action);
 
-function* watcherSaga(action){
-  yield takeEvery('SEARCH_RESULTS', searchSaga);
+  try {
+    const response = yield axios.get("/giphy");
+    yield put({ type: "SEARCH_RESULTS_FROM_SAGA", payload: response.data });
+  } catch (err) {
+    console.log(err);
+  }
 }
 
-function* searchSaga(action){
-    console.log('in search saga:', action);
-}
+const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(
-    combineReducers({
-        // reducers
-        //giphySearchResults: giphySearchResults
-    }),
-    applyMiddleware( logger )
-)
+  combineReducers({
+    // reducers
+    giphySearchResults
+  }),
+  applyMiddleware(sagaMiddleware, logger),
+);
 
-ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+// use watcher
+sagaMiddleware.run(watcherSaga);
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById("root")
+);

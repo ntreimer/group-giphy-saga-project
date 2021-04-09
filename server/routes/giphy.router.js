@@ -7,7 +7,7 @@ const axios = require('axios');
 require('dotenv').config();
 
 // array to store images from api
-const imageArray = ['fdas'];
+const imageArray = [];
 
 // return searched giphy images
 router.post('/', (req, res) => {
