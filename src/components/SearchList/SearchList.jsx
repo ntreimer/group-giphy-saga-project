@@ -3,6 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {useHistory} from 'react-router-dom';
 
+import SearchItem from '../SearchItem/SearchItem';
+
 function SearchList() {
     const history = useHistory();
     const dispatch = useDispatch();
@@ -14,7 +16,8 @@ function SearchList() {
         setSearchQuery(event.target.value);
     }
 
-    let gif = useSelector((store) => {
+    const giphy = useSelector((store) => {
+        console.log('useselector:', store.giphySearchResults);
         return store.giphySearchResults;
     })
     
@@ -29,12 +32,22 @@ function SearchList() {
         history.push('/favorites');
     }
 
+    const canWeMap = () => {
+        if (giphy.map) {
+            console.log('we can map!');
+            return (giphy.map((gif, index) => <SearchItem gif={gif} key={index}/>))
+        }
+        else {
+            console.log('cant map');
+            return '';
+        }
+    }
     return (
         <div>
             <h2>Search for Gifs</h2>
             <input type="text" value={searchQuery} onChange={handleChange} ></input>
             <button onClick={getGifs}>Search</button>
-            <p> <img src={''} /> </p>
+            {canWeMap()}
             <button onClick={ toFavorites }>Your Favorites!</button>
         </div>
     );

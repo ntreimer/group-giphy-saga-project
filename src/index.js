@@ -31,8 +31,8 @@ function* searchSaga(action) {
   try {
     yield axios.post("/giphy", {searchQuery: action.payload});
     const response = yield axios.get('/giphy');
-    console.log('saga axios get response:', response);
-    yield put({ type: "SEARCH_RESULTS_FROM_SAGA", payload: response });
+    console.log('saga axios get response:', response.data);
+    yield put({ type: "SEARCH_RESULTS_FROM_SAGA", payload: response.data });
   } catch (err) {
     console.log(err);
   }

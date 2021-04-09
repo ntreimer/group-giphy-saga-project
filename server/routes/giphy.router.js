@@ -13,7 +13,7 @@ let imageArray = [];
 router.post('/', (req, res) => {
     console.log('in /giphy GET');
     const searchQuery = req.body.searchQuery;
-    axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${process.env.API_KEY}&q=${searchQuery}&limit=2`).then((response) => {
+    axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${process.env.API_KEY}&q=${searchQuery}&limit=5`).then((response) => {
         console.log('back from giphy call with:', response.data.data);
         imageArray = response.data.data;
         console.log('imagearray:', imageArray);
